@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader
 
 import math
 import matplotlib.pyplot as plt
@@ -21,3 +22,7 @@ train_set = [(train_data[i], train_labels[i]) for i in range(train_data_length)]
 
 plt.plot(train_data[:, 0], train_data[:, 1], ".")
 plt.show()
+
+batch_size = 32
+train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
+
