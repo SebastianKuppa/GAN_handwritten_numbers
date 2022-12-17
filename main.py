@@ -73,4 +73,7 @@ lr = 0.001
 num_epochs = 300
 loss_function = nn.BCELoss()
 
+optimizer_discriminator = torch.optim.Adam(discriminator.parameters(), lr=lr)
+optimizer_generator = torch.optim.Adam(generator.parameters(), lr=lr)
+
 
