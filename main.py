@@ -68,4 +68,9 @@ class Generator(nn.Module):
 
 generator = Generator()
 
+# init training params
+lr = 0.001
+num_epochs = 300
+loss_function = nn.BCELoss()
+
 
