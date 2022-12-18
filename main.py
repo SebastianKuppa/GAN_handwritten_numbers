@@ -76,4 +76,37 @@ loss_function = nn.BCELoss()
 optimizer_discriminator = torch.optim.Adam(discriminator.parameters(), lr=lr)
 optimizer_generator = torch.optim.Adam(generator.parameters(), lr=lr)
 
+# training loop
+for epoch in range(num_epochs):
+    for n, (real_examples, _) in enumerate(train_loader):
+        # init data examples and labels for training
+        real_sample_labels = torch.ones((batch_size, 1))
+        latent_space_samples = torch.randn((batch_size, 2))
+        generated_samples = generator(latent_space_samples)
+        generated_sample_labels = torch.zeros((batch_size, 1))
+        all_samples = torch.cat((real_examples, generated_samples))
+        all_sample_labels = torch.cat((real_sample_labels, generated_sample_labels))
+
+        # train the discriminator
+        discriminator.zero_grad()
+        output_discriminator = discriminator(all_samples)
+        loss_discriminator = loss_function(output_discriminator, all_sample_labels)
+        loss_discriminator.backward()
+        optimizer_discriminator.step()
+
+        # training data for generator
+        latent_space_samples = torch.randn((batch_size, 2))
+
+        # training the generator
+        generator.zero_grad()
+        generated_samples = generator(latent_space_samples)
+        output_discriminator_generated = discriminator(generated_samples)
+        loss_generator = loss_function(output_discriminator_generated, real_sample_labels)
+        loss_generator.backward()
+        optimizer_generator.step()
+
+        # show loss
+        if epoch % 10 == 0 and n == batch_size - 1:
+            print(f"Epoch: {epoch} Loss D.: {loss_discriminator}")
+            print(f"Epoch: {epoch} Loss G.: {loss_generator}")
 
