@@ -51,6 +51,34 @@ class Discriminator(nn.Module):
             nn.Sigmoid()
         )
 
+    # input tensor is of shape 32x1x28x28, the first line of forward transforms it to
+    # -> 32x784
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x.view(x.size(0), 784)
         return self.model(x)
+
+
+class Generator(nn.Module):
+    def __init__(self):
+        super(Generator, self).__init__()
+        self.model = nn.Sequential(
+            nn.Linear(100, 256),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(256, 512),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(512, 1024),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(1024, 784),
+            nn.Tanh(),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        output = self.model(x)
+        output = output.view(output.size(0), 1, 28, 28)
+        return output
+
+
+generator = Generator().to(device)
