@@ -98,20 +98,24 @@ for epoch in range(num_epochs):
     for n, (real_samples, mnist_labels) in enumerate(train_loader):
         # training data for discriminator
         real_samples = real_samples.to(device)
+        # init real_sample labels all as 1
         real_sample_labels = torch.ones((batch_size, 1)).to(device)
 
         latent_space_samples = torch.randn((batch_size, 100)).to(device)
 
         generated_samples = generator(latent_space_samples)
         generated_sample_labels = torch.zeros(batch_size, 1)
-
+        # concatenate real and generated samples and labels along axis=0
         all_samples = torch.cat((real_samples, generated_samples), dim=0,)
         all_sample_labels = torch.cat((real_sample_labels, generated_sample_labels), dim=0)
 
         # discriminator training
         discriminator.zero_grad()
+        # get current discriminator predictions for all samples
         output_discriminator = discriminator(all_samples)
+        # calc loss between predictions and ground_truth
         loss_discriminator = loss_function(output_discriminator, all_sample_labels)
+        # backpropagate error
         loss_discriminator.backward()
         optimizer_discriminator.step()
 
