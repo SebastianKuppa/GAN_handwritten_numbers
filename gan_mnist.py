@@ -94,3 +94,18 @@ loss_function = nn.BCELoss()
 optimizer_discriminator = torch.optim.Adam(discriminator.parameters(), lr=lr,)
 optimizer_generator = torch.optim.Adam(generator.parameters(), lr=lr,)
 
+for epoch in range(num_epochs):
+    for n, (real_samples, mnist_labels) in enumerate(train_loader):
+        # training data for discriminator
+        real_samples = real_samples.to(device)
+        real_sample_labels = torch.ones((batch_size, 1)).to(device)
+
+        latent_space_samples = torch.randn((batch_size, 100)).to(device)
+
+        generated_samples = generator(latent_space_samples)
+        generated_sample_labels = torch.zeros(batch_size, 1)
+
+        all_samples = torch.cat((real_samples, generated_samples), dim=0,)
+        all_sample_labels = torch.cat((real_sample_labels, generated_sample_labels), dim=0)
+
+
