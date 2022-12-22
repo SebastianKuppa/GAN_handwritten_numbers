@@ -58,6 +58,9 @@ class Discriminator(nn.Module):
         return self.model(x)
 
 
+discriminator = Discriminator()
+
+
 class Generator(nn.Module):
     def __init__(self):
         super(Generator, self).__init__()
@@ -82,3 +85,12 @@ class Generator(nn.Module):
 
 
 generator = Generator().to(device)
+
+# add training parameters
+lr = 0.0001
+num_epochs = 50
+loss_function = nn.BCELoss()
+
+optimizer_discriminator = torch.optim.Adam(discriminator.parameters(), lr=lr,)
+optimizer_generator = torch.optim.Adam(generator.parameters(), lr=lr,)
+
