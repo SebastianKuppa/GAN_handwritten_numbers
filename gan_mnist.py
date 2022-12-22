@@ -108,4 +108,11 @@ for epoch in range(num_epochs):
         all_samples = torch.cat((real_samples, generated_samples), dim=0,)
         all_sample_labels = torch.cat((real_sample_labels, generated_sample_labels), dim=0)
 
+        # discriminator training
+        discriminator.zero_grad()
+        output_discriminator = discriminator(all_samples)
+        loss_discriminator = loss_function(output_discriminator, all_sample_labels)
+        loss_discriminator.backward()
+        optimizer_discriminator.step()
+
 
