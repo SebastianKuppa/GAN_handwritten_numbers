@@ -115,4 +115,18 @@ for epoch in range(num_epochs):
         loss_discriminator.backward()
         optimizer_discriminator.step()
 
+        # data for training generator
+        latent_space_samples = torch.randn((batch_size, 100)).to(device)
 
+        # generator training
+        generator.zero_grad()
+        generated_samples = generator(latent_space_samples)
+        output_discriminator_generated = discriminator(generated_samples)
+        loss_generator = loss_function(output_discriminator_generated, real_sample_labels)
+        loss_generator.backward()
+        optimizer_generator.step()
+
+        # display loss
+        if n == batch_size-1:
+            print(f"Epoch: {epoch} Loss Discriminator: {loss_discriminator}")
+            print(f"Epoch: {epoch} Loss Generator: {loss_generator}")
